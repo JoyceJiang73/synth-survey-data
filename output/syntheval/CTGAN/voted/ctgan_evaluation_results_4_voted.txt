@@ -1,0 +1,52 @@
+SynthEval: synthetic data read successfully
+
+SynthEval results
+=================================================================
+
+Utility metric description                    value   error                                 
++---------------------------------------------------------------+
+| Mixed correlation matrix difference      :   1.6934           |
+| Pairwise mutual information difference   :   1.4227           |
+| Kolmogorov–Smirnov / Total Variation Distance test            |
+|   -> average combined statistic          :   0.1067  0.0131   |
+|       -> avg. Kolmogorov–Smirnov dist.   :   0.1052  0.0298   |
+|       -> avg. Total Variation Distance   :   0.1071  0.0155   |
+|   -> average combined p-value            :   0.0007  0.0001   |
+|       -> # significant tests at a=0.05   :   12               |
+|       -> fraction of significant tests   :   1.0000           |
+| Propensity mean squared error (pMSE)     :   0.0222  0.0001   |
+|   -> average pMSE classifier accuracy    :   0.6139  0.0023   |
++---------------------------------------------------------------+
+
+Classification accuracy test     
+avg. of 5-fold cross val.:
+classifier model             acc_r   acc_f    |diff|  error
++---------------------------------------------------------------+
+| DecisionTreeClassifier  :   0.7087  0.7212   0.0125  0.0041   |
+| AdaBoostClassifier      :   0.7624  0.7587   0.0038  0.0021   | 
+| RandomForestClassifier  :   0.7585  0.7550   0.0035  0.0030   |
+| LogisticRegression      :   0.7600  0.7600   0.0000  0.0031   |
++---------------------------------------------------------------+
+| Average                 :   0.7474  0.7487   0.0049  0.0016   |
++---------------------------------------------------------------+
+
+hold out data results:
++---------------------------------------------------------------+
+| DecisionTreeClassifier  :   0.7157  0.7303   0.0147           |
+| AdaBoostClassifier      :   0.7638  0.7563   0.0075           |
+| RandomForestClassifier  :   0.7536  0.7510   0.0025           |
+| LogisticRegression      :   0.7583  0.7583   0.0000           |
++---------------------------------------------------------------+
+| Average                 :   0.7230  0.7601   0.0062  0.0032   |
++---------------------------------------------------------------+
+    
+Privacy metric description                    value   error                                 
++---------------------------------------------------------------+
+| Median distance to closest record        :   3.9770           |
+| Epsilon identifiability risk             :   0.1433           |
+| Membership inference attack Classifier F1:   0.4518  0.0007   |
+|   -> Precision                           :   0.4961  0.0017   |
+|   -> Recall                              :   0.2068  0.0015   |
+| Attr. disclosure risk (acc. with holdout):   0.4146  0.0717   |
++---------------------------------------------------------------+
+    

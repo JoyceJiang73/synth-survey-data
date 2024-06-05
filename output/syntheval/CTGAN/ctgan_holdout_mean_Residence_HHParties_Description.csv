@@ -1,0 +1,6 @@
+Classifier,acc_r,acc_f,diff,error
+AdaBoostClassifier,0.5507,0.30722,0.24354,
+Average,0.47254000000000007,0.429,0.28968,0.09242
+DecisionTreeClassifier,0.6756,0.26956,0.40602,
+LogisticRegression,0.3174,0.2703,0.05244,
+RandomForestClassifier,0.7338,0.27708,0.45668,

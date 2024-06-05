@@ -1,0 +1,4 @@
+Model,Precision,Recall,"Attribute disclosure risk (acc, with holdout)",Epsilon identifiability risk,Median distance to closest record,Membership inference attack Classifier F1
+CTGAN,0.501,0.1853,0.4203,0.145,3.7542,0.4448
+LLM,0.5084,0.8894,0.6064,0.5304,0.7286,0.4353
+Synthpop,0.5018,0.847,0.5684,0.4734,1.1044,0.4363

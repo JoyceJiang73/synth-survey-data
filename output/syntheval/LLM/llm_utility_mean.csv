@@ -1,0 +1,10 @@
+Metric,Value,Error
+-> average combined p-value,0.00152,0.00048000000000000007
+-> average combined statistic,0.037540000000000004,0.0042
+-> average pMSE classifier accuracy,0.53476,0.0018800000000000002
+-> avg. Kolmogorov–Smirnov dist.,0.0298,0.009720000000000001
+-> avg. Total Variation Distance,0.04012,0.00456
+-> fraction of significant tests,1.0,
+Mixed correlation matrix difference,0.10588,
+Pairwise mutual information difference,0.09504,
+Propensity mean squared error (pMSE),0.0021400000000000004,2e-05

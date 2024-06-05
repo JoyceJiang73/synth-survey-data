@@ -16,5 +16,4 @@ Repository for replicating "Synthetic Survey Data Generation and Evaluation: A C
   - Target-specific utility.
   - Privacy measures.
 
-### Result Parser
-- **Functionality**: Parses and consolidates results from `Syntheval`.
+- **Result Parser**: Parses and consolidates results from `Syntheval`.

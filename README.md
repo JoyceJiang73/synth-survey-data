@@ -7,7 +7,7 @@ Repository for replicating "Synthetic Survey Data Generation and Evaluation: A C
 
 ### Generator
 - `Synthpop`: Synthetic data generation using traditional population modeling.
-- `CTGAN`: Generative adversarial network for complex table data.
+- `CTGAN`: Generative adversarial network for mixed-type tabular data generation.
 - `REaDTabFormer`: Transformer-based synthetic tabular data generation.
 
 ### Syntheval
@@ -17,4 +17,4 @@ Repository for replicating "Synthetic Survey Data Generation and Evaluation: A C
   - Privacy measures.
 
 ### Result Parser
-- **Functionality**: Parses and presents results from synthetic data evaluations.
+- **Functionality**: Parses and consolidates results from `Syntheval`.

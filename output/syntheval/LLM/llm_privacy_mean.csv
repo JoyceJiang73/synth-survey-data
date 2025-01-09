@@ -1,7 +1,0 @@
-Metric,Value,Error
--> Precision,0.50838,0.0005
--> Recall,0.8894399999999999,0.00196
-Attr. disclosure risk (acc. with holdout),0.60636,0.08054
-Epsilon identifiability risk,0.53038,
-Median distance to closest record,0.7286400000000001,
-Membership inference attack Classifier F1,0.43533999999999995,0.0010999999999999998

@@ -1,0 +1,545 @@
+---
+title: "process_data"
+author: "Siyu Liang"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(stringr)
+library(ggplot2)
+library(ggpubr)
+```
+
+
+# clean general utility
+
+```{r}
+
+read_and_label <- function(file_path) {
+  # Extract the base name of the file
+  file_name <- basename(file_path)
+  
+  # Extract the 'state' as the string before the first '_'
+  state_value <- str_extract(file_name, "^[^_]+")
+  
+  # Extract the 'n' value as the numeric part of the file name
+  n_value <- as.numeric(str_extract(file_name, "\\d+"))
+  
+  # Read the CSV file into a dataframe
+  df <- read.csv(file_path)
+  
+  # Add the new columns 'state' and 'n'
+  df <- df %>%
+    mutate(state = state_value, n = n_value)%>%
+    select(state, n, everything()) %>%
+    select(-X) 
+  
+names(df) <- gsub("^X\\.\\.\\.", "", names(df))
+  return(df)
+}
+
+# CTGAN
+
+# List all CSV files in the specified directory that match the pattern
+file_list <- list.files(path = "../03_syntheval/parsed_results/CTGAN", pattern = "_average_general_util\\.csv", full.names = TRUE)
+
+# Read and combine all dataframes
+ctgan <- do.call(rbind, lapply(file_list, read_and_label))
+
+# List all CSV files in the specified directory that match the pattern
+sd_ctgan_file_list <- list.files(path = "../03_syntheval/parsed_results/CTGAN", pattern = "_sd_general_util\\.csv", full.names = TRUE)
+
+# Read and combine all dataframes
+ctgan_sd <- do.call(rbind, lapply(sd_ctgan_file_list, read_and_label))
+
+ctgan_sd <- ctgan_sd %>%
+  select(-Error) %>%
+  rename(sd = Value)
+  
+ctgan = merge(ctgan,ctgan_sd)
+
+ctgan$model = "CTGAN"
+
+
+write.csv(ctgan,"../03_syntheval/parsed_results/clean/ctgan_average_general_util.csv")
+
+# Synthpop
+
+# List all CSV files in the specified directory that match the pattern
+file_list_synthpop <- list.files(path = "../03_syntheval/parsed_results/synthpop", pattern = "_average_general_util\\.csv", full.names = TRUE)
+
+# Read and combine all dataframes
+synthpop <- do.call(rbind, lapply(file_list_synthpop, read_and_label))
+
+# List all CSV files in the specified directory that match the pattern
+sd_synthpop_file_list <- list.files(path = "../03_syntheval/parsed_results/synthpop", pattern = "_sd_general_util\\.csv", full.names = TRUE)
+
+# Read and combine all dataframes
+synthpop_sd <- do.call(rbind, lapply(sd_synthpop_file_list, read_and_label))
+
+synthpop_sd <- synthpop_sd %>%
+  select(-Error) %>%
+  rename(sd = Value)
+  
+synthpop = merge(synthpop,synthpop_sd)
+
+synthpop$model = "SYNTHPOP"
+
+write.csv(synthpop,"../03_syntheval/parsed_results/clean/synthpop_average_general_util.csv")
+
+# llm
+
+# List all CSV files in the specified directory that match the pattern
+file_list_llm <- list.files(path = "../03_syntheval/parsed_results/llm", pattern = "_average_general_util\\.csv", full.names = TRUE)
+
+# Read and combine all dataframes
+llm <- do.call(rbind, lapply(file_list_llm, read_and_label))
+
+# List all CSV files in the specified directory that match the pattern
+sd_llm_file_list <- list.files(path = "../03_syntheval/parsed_results/llm", pattern = "_sd_general_util\\.csv", full.names = TRUE)
+
+# Read and combine all dataframes
+llm_sd <- do.call(rbind, lapply(sd_llm_file_list, read_and_label))
+
+llm_sd <- llm_sd %>%
+  select(-Error) %>%
+  rename(sd = Value)
+  
+llm = merge(llm,llm_sd)
+
+llm$model = "REaLTabFormer"
+
+write.csv(llm,"../03_syntheval/parsed_results/clean/llm_average_general_util.csv")
+
+# smote
+
+# List all CSV files in the specified directory that match the pattern
+file_list_smote <- list.files(path = "../03_syntheval/parsed_results/smote", pattern = "_average_general_util\\.csv", full.names = TRUE)
+
+# Read and combine all dataframes
+smote <- do.call(rbind, lapply(file_list_smote, read_and_label))
+
+# List all CSV files in the specified directory that match the pattern
+sd_smote_file_list <- list.files(path = "../03_syntheval/parsed_results/smote", pattern = "_sd_general_util\\.csv", full.names = TRUE)
+
+# Read and combine all dataframes
+smote_sd <- do.call(rbind, lapply(sd_smote_file_list, read_and_label))
+
+smote_sd <- smote_sd %>%
+  select(-Error) %>%
+  rename(sd = Value)
+  
+smote = merge(smote,smote_sd)
+
+smote$model = "SMOTE"
+
+write.csv(smote,"../03_syntheval/parsed_results/clean/smote_average_general_util.csv")
+
+# TVAE
+
+# List all CSV files in the specified directory that match the pattern
+file_list_TVAE <- list.files(path = "../03_syntheval/parsed_results/TVAE", pattern = "_average_general_util\\.csv", full.names = TRUE)
+
+# Read and combine all dataframes
+TVAE <- do.call(rbind, lapply(file_list_TVAE, read_and_label))
+
+# List all CSV files in the specified directory that match the pattern
+sd_TVAE_file_list <- list.files(path = "../03_syntheval/parsed_results/TVAE", pattern = "_sd_general_util\\.csv", full.names = TRUE)
+
+# Read and combine all dataframes
+TVAE_sd <- do.call(rbind, lapply(sd_TVAE_file_list, read_and_label))
+
+TVAE_sd <- TVAE_sd %>%
+  select(-Error) %>%
+  rename(sd = Value)
+  
+TVAE = merge(TVAE,TVAE_sd)
+
+TVAE$model = "TVAE"
+
+write.csv(TVAE,"../03_syntheval/parsed_results/clean/TVAE_average_general_util.csv")
+
+ctgan = read.csv("../03_syntheval/parsed_results/clean/ctgan_average_general_util.csv")
+synthpop = read.csv("../03_syntheval/parsed_results/clean/synthpop_average_general_util.csv")
+llm = read.csv("../03_syntheval/parsed_results/clean/llm_average_general_util.csv")
+smote = read.csv("../03_syntheval/parsed_results/clean/smote_average_general_util.csv")
+TVAE = read.csv("../03_syntheval/parsed_results/clean/TVAE_average_general_util.csv")
+
+general_utility <- rbind(ctgan,synthpop,llm,smote,TVAE)
+
+write.csv(general_utility,"../03_syntheval/parsed_results/clean/combine_general_util.csv")
+
+rm(list = ls())
+```
+
+# target specific utility
+```{r}
+
+read_and_label_others <- function(file_path) {
+  # Extract the base name of the file
+  file_name <- basename(file_path)
+  
+  # Extract the 'state' as the string before the first '_'
+  state_value <- str_extract(file_name, "^[^_]+")
+  
+  # Extract the 'n' value as the numeric part of the file name
+  n_value <- as.numeric(str_extract(file_name, "\\d+"))
+  
+  # Extract the 'variable' as the phrase after 'util_'
+  variable_value <- str_extract(file_name, "(?<=util_)\\w+(?=\\.csv)")
+  
+  # Read the CSV file into a dataframe
+  df <- read.csv(file_path)
+  
+  # Add the new columns 'state' and 'n'
+  df <- df %>%
+    mutate(state = state_value, n = n_value, variable = variable_value)%>%
+    select(state, n, variable, everything()) %>%
+    select(-X) 
+  
+names(df) <- gsub("^X\\.\\.\\.", "", names(df))
+  return(df)
+}
+
+# CTGAN
+
+# List all CSV files in the specified directory that match the pattern
+file_list <- list.files(path = "../03_syntheval/parsed_results/CTGAN", pattern = "average_target_util_.*\\.csv", full.names = TRUE)
+
+# Read and combine all dataframes
+ctgan_others <- do.call(rbind, lapply(file_list, read_and_label_others))
+
+# List all CSV files in the specified directory that match the pattern
+sd_ctgan_file_others <- list.files(path = "../03_syntheval/parsed_results/CTGAN", pattern = "_sd_target_util.*\\.csv", full.names = TRUE)
+
+# Read and combine all dataframes
+ctgan_sd_others <- do.call(rbind, lapply(sd_ctgan_file_others, read_and_label_others))
+
+
+ctgan_sd_others <- ctgan_sd_others %>%
+  select(-error) %>%
+  rename(sd_acc_r = acc_r,
+         sd_acc_f = acc_f,
+         sd_X.diff = X.diff.)
+  
+ctgan_others = merge(ctgan_others,ctgan_sd_others)
+
+ctgan_others$model = "CTGAN"
+
+write.csv(ctgan_others,"../03_syntheval/parsed_results/clean/ctgan_target.csv")
+
+# Sythpop
+
+# List all CSV files in the specified directory that match the pattern
+file_list_synthpop <- list.files(path = "../03_syntheval/parsed_results/synthpop", pattern = "average_target_util_.*\\.csv", full.names = TRUE)
+
+# Read and combine all dataframes
+synthpop_others <- do.call(rbind, lapply(file_list_synthpop, read_and_label_others))
+
+# List all CSV files in the specified directory that match the pattern
+sd_synthpop_file_others <- list.files(path = "../03_syntheval/parsed_results/synthpop", pattern = "_sd_target_util.*\\.csv", full.names = TRUE)
+
+# Read and combine all dataframes
+synthpop_sd_others <- do.call(rbind, lapply(sd_synthpop_file_others, read_and_label_others))
+
+
+synthpop_sd_others <- synthpop_sd_others %>%
+  select(-error) %>%
+  rename(sd_acc_r = acc_r,
+         sd_acc_f = acc_f,
+         sd_X.diff = X.diff.)
+  
+synthpop_others = merge(synthpop_others,synthpop_sd_others)
+
+synthpop_others$model = "SYNTHPOP"
+
+write.csv(synthpop_others,"../03_syntheval/parsed_results/clean/synthpop_target.csv")
+
+# LLM
+file_list_llm <- list.files(path = "../03_syntheval/parsed_results/LLM", pattern = "average_target_util_.*\\.csv", full.names = TRUE)
+# Read and combine all dataframes
+llm_others <- do.call(rbind, lapply(file_list_llm, read_and_label_others))
+
+# List all CSV files in the specified directory that match the pattern
+sd_llm_file_others <- list.files(path = "../03_syntheval/parsed_results/llm", pattern = "_sd_target_util.*\\.csv", full.names = TRUE)
+
+# Read and combine all dataframes
+llm_sd_others <- do.call(rbind, lapply(sd_llm_file_others, read_and_label_others))
+
+
+llm_sd_others <- llm_sd_others %>%
+  select(-error) %>%
+  rename(sd_acc_r = acc_r,
+         sd_acc_f = acc_f,
+         sd_X.diff = X.diff.)
+  
+llm_others = merge(llm_others,llm_sd_others)
+
+llm_others$model = "REaLTabFormer"
+
+write.csv(llm_others,"../03_syntheval/parsed_results/clean/llm_target.csv")
+
+# smote
+file_list_smote <- list.files(path = "../03_syntheval/parsed_results/smote", pattern = "average_target_util_.*\\.csv", full.names = TRUE)
+# Read and combine all dataframes
+smote_others <- do.call(rbind, lapply(file_list_smote, read_and_label_others))
+
+# List all CSV files in the specified directory that match the pattern
+sd_smote_file_others <- list.files(path = "../03_syntheval/parsed_results/smote", pattern = "_sd_target_util.*\\.csv", full.names = TRUE)
+
+# Read and combine all dataframes
+smote_sd_others <- do.call(rbind, lapply(sd_smote_file_others, read_and_label_others))
+
+
+smote_sd_others <- smote_sd_others %>%
+  select(-error) %>%
+  rename(sd_acc_r = acc_r,
+         sd_acc_f = acc_f,
+         sd_X.diff = X.diff.)
+  
+smote_others = merge(smote_others,smote_sd_others)
+
+smote_others$model = "SMOTE"
+
+write.csv(smote_others,"../03_syntheval/parsed_results/clean/smote_target.csv")
+
+
+
+# TVAE
+file_list_TVAE <- list.files(path = "../03_syntheval/parsed_results/TVAE", pattern = "average_target_util_.*\\.csv", full.names = TRUE)
+
+
+# Read and combine all dataframes
+TVAE_others <- do.call(rbind, lapply(file_list_TVAE, read_and_label_others))
+
+# List all CSV files in the specified directory that match the pattern
+sd_TVAE_file_others <- list.files(path = "../03_syntheval/parsed_results/TVAE", pattern = "_sd_target_util.*\\.csv", full.names = TRUE)
+
+# Read and combine all dataframes
+TVAE_sd_others <- do.call(rbind, lapply(sd_TVAE_file_others, read_and_label_others))
+
+
+TVAE_sd_others <- TVAE_sd_others %>%
+  select(-error) %>%
+  rename(sd_acc_r = acc_r,
+         sd_acc_f = acc_f,
+         sd_X.diff = X.diff.)
+  
+TVAE_others = merge(TVAE_others,TVAE_sd_others)
+
+TVAE_others$model = "TVAE"
+
+write.csv(TVAE_others,"../03_syntheval/parsed_results/clean/TVAE_target.csv")
+
+synthpop_others = read.csv("../03_syntheval/parsed_results/clean/synthpop_target.csv")
+ctgan_others = read.csv("../03_syntheval/parsed_results/clean/ctgan_target.csv")
+llm_others = read.csv("../03_syntheval/parsed_results/clean/llm_target.csv")
+smote_others = read.csv("../03_syntheval/parsed_results/clean/smote_target.csv")
+TVAE_others = read.csv("../03_syntheval/parsed_results/clean/TVAE_target.csv")
+
+target = rbind(synthpop_others,ctgan_others,llm_others,smote_others,TVAE_others)
+write.csv(target,"../03_syntheval/parsed_results/clean/combine_target_util.csv")
+
+rm(list = ls())
+```
+
+# privacy
+
+```{r}
+
+# CTGAN
+
+# List all CSV files in the specified directory that match the pattern
+file_list_ctgan_privacy <- list.files(path = "../03_syntheval/parsed_results/CTGAN", pattern = "_average_privacy\\.csv", full.names = TRUE)
+
+# Read and combine all dataframes
+ctgan_privacy <- do.call(rbind, lapply(file_list_ctgan_privacy, read_and_label))
+
+# List all CSV files in the specified directory that match the pattern
+sd_ctgan_file_privacy <- list.files(path = "../03_syntheval/parsed_results/CTGAN", pattern = "_sd_privacy\\.csv", full.names = TRUE)
+
+# Read and combine all dataframes
+ctgan_sd_privacy <- do.call(rbind, lapply(sd_ctgan_file_privacy, read_and_label))
+
+ctgan_sd_privacy <- ctgan_sd_privacy %>%
+  select(-Error) %>%
+  rename(sd = Value)
+  
+ctgan_privacy = merge(ctgan_privacy,ctgan_sd_privacy)
+
+ctgan_privacy$model = "CTGAN"
+
+write.csv(ctgan_privacy,"../03_syntheval/parsed_results/clean/ctgan_privacy.csv")
+
+
+# synthpop
+
+# List all CSV files in the specified directory that match the pattern
+file_list_synthpop_privacy <- list.files(path = "../03_syntheval/parsed_results/synthpop", pattern = "_average_privacy\\.csv", full.names = TRUE)
+
+# Read and combine all dataframes
+synthpop_privacy <- do.call(rbind, lapply(file_list_synthpop_privacy, read_and_label))
+
+# List all CSV files in the specified directory that match the pattern
+sd_synthpop_file_privacy <- list.files(path = "../03_syntheval/parsed_results/synthpop", pattern = "_sd_privacy\\.csv", full.names = TRUE)
+
+# Read and combine all dataframes
+synthpop_sd_privacy <- do.call(rbind, lapply(sd_synthpop_file_privacy, read_and_label))
+
+synthpop_sd_privacy <- synthpop_sd_privacy %>%
+  select(-Error) %>%
+  rename(sd = Value)
+  
+synthpop_privacy = merge(synthpop_privacy,synthpop_sd_privacy)
+
+
+synthpop_privacy$model = "SYNTHPOP"
+
+write.csv(synthpop_privacy,"../03_syntheval/parsed_results/clean/synthpop_privacy.csv")
+
+
+# llm
+
+# List all CSV files in the specified directory that match the pattern
+file_list_llm_privacy <- list.files(path = "../03_syntheval/parsed_results/llm", pattern = "_average_privacy\\.csv", full.names = TRUE)
+
+# Read and combine all dataframes
+llm_privacy <- do.call(rbind, lapply(file_list_llm_privacy, read_and_label))
+
+# List all CSV files in the specified directory that match the pattern
+sd_llm_file_privacy <- list.files(path = "../03_syntheval/parsed_results/llm", pattern = "_sd_privacy\\.csv", full.names = TRUE)
+
+# Read and combine all dataframes
+llm_sd_privacy <- do.call(rbind, lapply(sd_llm_file_privacy, read_and_label))
+
+llm_sd_privacy <- llm_sd_privacy %>%
+  select(-Error) %>%
+  rename(sd = Value)
+  
+llm_privacy = merge(llm_privacy,llm_sd_privacy)
+
+
+llm_privacy$model = "REaLTabFormer"
+
+write.csv(llm_privacy,"../03_syntheval/parsed_results/clean/llm_privacy.csv")
+
+# smote
+
+# List all CSV files in the specified directory that match the pattern
+file_list_smote_privacy <- list.files(path = "../03_syntheval/parsed_results/smote", pattern = "_average_privacy\\.csv", full.names = TRUE)
+
+# Read and combine all dataframes
+smote_privacy <- do.call(rbind, lapply(file_list_smote_privacy, read_and_label))
+
+# List all CSV files in the specified directory that match the pattern
+sd_smote_file_privacy <- list.files(path = "../03_syntheval/parsed_results/smote", pattern = "_sd_privacy\\.csv", full.names = TRUE)
+
+# Read and combine all dataframes
+smote_sd_privacy <- do.call(rbind, lapply(sd_smote_file_privacy, read_and_label))
+
+smote_sd_privacy <- smote_sd_privacy %>%
+  select(-Error) %>%
+  rename(sd = Value)
+  
+smote_privacy = merge(smote_privacy,smote_sd_privacy)
+
+
+smote_privacy$model = "SMOTE"
+
+write.csv(smote_privacy,"../03_syntheval/parsed_results/clean/smote_privacy.csv")
+
+# TVAE
+
+# List all CSV files in the specified directory that match the pattern
+file_list_TVAE_privacy <- list.files(path = "../03_syntheval/parsed_results/TVAE", pattern = "_average_privacy\\.csv", full.names = TRUE)
+
+# Read and combine all dataframes
+TVAE_privacy <- do.call(rbind, lapply(file_list_TVAE_privacy, read_and_label))
+
+# List all CSV files in the specified directory that match the pattern
+sd_TVAE_file_privacy <- list.files(path = "../03_syntheval/parsed_results/TVAE", pattern = "_sd_privacy\\.csv", full.names = TRUE)
+
+# Read and combine all dataframes
+TVAE_sd_privacy <- do.call(rbind, lapply(sd_TVAE_file_privacy, read_and_label))
+
+TVAE_sd_privacy <- TVAE_sd_privacy %>%
+  select(-Error) %>%
+  rename(sd = Value)
+  
+TVAE_privacy = merge(TVAE_privacy,TVAE_sd_privacy)
+
+
+TVAE_privacy$model = "TVAE"
+
+write.csv(TVAE_privacy,"../03_syntheval/parsed_results/clean/TVAE_privacy.csv")
+
+
+ctgan_privacy = read.csv("../03_syntheval/parsed_results/clean/ctgan_privacy.csv")
+synthpop_privacy = read.csv("../03_syntheval/parsed_results/clean/synthpop_privacy.csv")
+llm_privacy = read.csv("../03_syntheval/parsed_results/clean/llm_privacy.csv")
+smote_privacy = read.csv("../03_syntheval/parsed_results/clean/smote_privacy.csv")
+TVAE_privacy = read.csv("../03_syntheval/parsed_results/clean/TVAE_privacy.csv")
+
+# combine
+
+privacy = rbind(synthpop_privacy,ctgan_privacy,llm_privacy,smote_privacy,TVAE_privacy)
+
+write.csv(privacy,"../03_syntheval/parsed_results/clean/combine_privacy.csv")
+rm(list = ls())
+```
+
+# process target utility 
+
+```{r}
+target = read.csv("../03_syntheval/parsed_results/clean/combine_target_util.csv")
+
+target_synthetic = target %>%
+  filter(Classifier == "AdaBoostClassifier.SYNTHETIC" | Classifier == "DecisionTreeClassifier.SYNTHETIC" | 
+           Classifier == "LogisticRegression.SYNTHETIC"  | Classifier =="RandomForestClassifier.SYNTHETIC" ) %>%
+  # manually calculate diff
+  mutate(diff = abs(acc_f-acc_r),
+         sd_diff = abs(sd_acc_f-sd_acc_r)) %>%
+  select(state,n,variable,model,Classifier, acc_r,acc_f,sd_acc_f,sd_acc_r,diff,sd_diff) 
+
+x = target_synthetic %>%
+  filter(model == "CTGAN"& n == 20000 & state == "tx")
+
+target_synthetic_ave = target_synthetic %>%
+  group_by(state,n,variable,model) %>%
+  summarise(ave_acc_r = mean(acc_r),
+         ave_acc_f = mean(acc_f),
+         ave_diff = mean(diff),
+         ave_sd_acc_r = mean(sd_acc_r),
+         ave_sd_acc_f = mean(sd_acc_f),
+         ave_sd_diff = mean(sd_diff))
+
+target_synthetic_ave$type = "synthetic"
+
+
+target_holdout = target %>%
+  filter(Classifier == "AdaBoostClassifier.HOLDOUT" | Classifier == "DecisionTreeClassifier.HOLDOUT" | 
+           Classifier == "LogisticRegression.HOLDOUT"  | Classifier =="RandomForestClassifier.HOLDOUT" ) %>%
+  # manually calculate diff
+  mutate(diff = abs(acc_f-acc_r),
+         sd_diff = abs(sd_acc_f-sd_acc_r)) %>%
+  select(state,n,variable,model,Classifier, acc_r,acc_f,sd_acc_f,sd_acc_r,diff,sd_diff) 
+
+target_holdout_ave = target_holdout %>%
+  group_by(state,n,variable,model) %>%
+  summarise(ave_acc_r = mean(acc_r),
+         ave_acc_f = mean(acc_f),
+         ave_diff = mean(diff),
+         ave_sd_acc_r = mean(sd_acc_r),
+         ave_sd_acc_f = mean(sd_acc_f),
+         ave_sd_diff = mean(sd_diff))
+
+target_holdout_ave$type = "holdout"
+
+ave_target = rbind(target_synthetic_ave,target_holdout_ave)
+
+write.csv(ave_target, "../03_syntheval/parsed_results/clean/average_target.csv")
+```
+

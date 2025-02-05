@@ -18,4 +18,4 @@ Repository for replicating "Synthetic Survey Data Generation and Evaluation."
   - Target-specific utility.
   - Privacy measures.
 
-- **Result Parser**: Parses and consolidates results from `Syntheval`.
+- **Result Parser**: Parses and consolidates results using `syntheval.ipynb`.
